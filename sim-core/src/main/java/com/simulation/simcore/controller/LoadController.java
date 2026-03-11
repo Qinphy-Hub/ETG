@@ -71,41 +71,16 @@ public class LoadController {
         Map<String, JSONObject> data = new HashMap<>();
         data.put("nodes", null);
         data.put("edges", null);
-//        try {
-//            Process p = Runtime.getRuntime().exec(args);
-//            BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
-//            String nodes = null;
-//            while ((nodes = reader.readLine()) != null) {
-//                data.put("nodes", JSONObject.parseObject(nodes));
-//                System.out.println(nodes);
-//            }
-//            String edges = null;
-//            while ((edges = reader.readLine()) != null) {
-//                data.put("edges", JSONObject.parseObject(edges));
-//                System.out.println(edges);
-//            }
-//            reader.close();
-//            p.waitFor();
-//            System.out.println("OSM END!" + nodes + edges);
-////            if (nodes == null || edges == null) return Result.failure("Can not get data from osm!", null);
-//            return Result.success(data);
-//        } catch (IOException | InterruptedException e) {
-//            return Result.failure("Download traffic data failed!", data);
-//        }
         try {
             ProcessBuilder builder = new ProcessBuilder(args);
             Process process = builder.start();
 
-            StringBuilder output = new StringBuilder();
-            StringBuilder errors = new StringBuilder();
-
             Thread thread = new Thread(() -> {
                 try (BufferedReader reader = new BufferedReader(
                         new InputStreamReader(process.getInputStream(), StandardCharsets.UTF_8))) {
-                    String line;
+                    String line = null;
                     boolean flag = false;
                     while ((line = reader.readLine()) != null) {
-                        output.append(line).append("\n");
                         if (!flag) {
                             data.put("nodes", JSONObject.parseObject(line));
                             System.out.println("nodes: " + JSONObject.toJSONString(data.get("nodes")));
@@ -121,6 +96,8 @@ public class LoadController {
             });
 
             thread.setDaemon(true);
+
+            StringBuilder errors = new StringBuilder();
 
             Thread errorThread = new Thread(() -> {
                 try (BufferedReader reader = new BufferedReader(
@@ -168,10 +145,7 @@ public class LoadController {
             return Result.failure("Python exit!", data);
         }
     }
-/*
-Python exit code :1, error :Traceback (most recent call last): File "D:\Simulation\sim-core\target\classes\download-osm.py", line 2, in <module> import osmnx as ox File "C:\Users\qinph\AppData\Roaming\Python\Python312\site-packages\osmnx\__init__.py", line 10, in <module> from .bearing import add_edge_bearings as add_edge_bearings File "C:\Users\qinph\AppData\Roaming\Python\Python312\site-packages\osmnx\bearing.py", line 9, in <module> import numpy as np ModuleNotFoundError: No module named 'numpy'
 
- */
     // 2. get nodes.json and edges.json from front-side
     @PostMapping("/save-traffic")
     public Result<String> saveTrafficNetworkData(int projectId, String nodes, String edges) {
