@@ -38,8 +38,7 @@ CREATE TABLE `asymmetricload` (
   `scaling` float DEFAULT '1',
   `type` enum('wye','delta') DEFAULT 'wye',
   `index` int(11) DEFAULT NULL,
-  `in_service` tinyint(1) DEFAULT '1',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `in_service` tinyint(1) DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -75,8 +74,7 @@ CREATE TABLE `asymmetricstaticgenerator` (
   `index` int(11) DEFAULT NULL,
   `scaling` float DEFAULT '1' COMMENT '三相缩放因子',
   `type` enum('wye','delta') DEFAULT 'wye' COMMENT '连接类型：星型/三角型',
-  `in_service` tinyint(1) DEFAULT '1',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `in_service` tinyint(1) DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -111,8 +109,7 @@ CREATE TABLE `backtobackvoltagesourceconverter` (
   `name` varchar(100) DEFAULT NULL,
   `index` int(11) DEFAULT NULL,
   `controllable` tinyint(1) DEFAULT '0' COMMENT '是否可控',
-  `in_service` tinyint(1) DEFAULT '1',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `in_service` tinyint(1) DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -137,7 +134,7 @@ CREATE TABLE `bus` (
   `name` varchar(100) DEFAULT NULL,
   `index` int(11) DEFAULT NULL,
   `geodata` point DEFAULT NULL,
-  `type` enum('n','b','m') NOT NULL DEFAULT 'n',
+  `type` enum('n','b','m') DEFAULT 'n',
   `zone` varchar(100) DEFAULT NULL,
   `in_service` tinyint(1) DEFAULT '1',
   `max_vm_pu` float DEFAULT NULL,
@@ -226,12 +223,11 @@ CREATE TABLE `extendedward` (
   `qz_mvar` float NOT NULL COMMENT '阻抗部分无功功率(MVar)，1.0pu时',
   `r_ohm` float DEFAULT NULL COMMENT '电压源内阻(Ω)',
   `x_ohm` float DEFAULT NULL COMMENT '电压源内抗(Ω)',
-  `vm_pu` float DEFAULT NULL COMMENT 'PV节点电压幅值(标幺值)',
+  `vm_pu` float DEFAULT '1',
   `slack_weight` float DEFAULT '1' COMMENT '平衡节点权重',
   `name` varchar(100) DEFAULT NULL,
   `index` int(11) DEFAULT NULL,
-  `in_service` tinyint(1) DEFAULT '1',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `in_service` tinyint(1) DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -252,9 +248,8 @@ DROP TABLE IF EXISTS `externalgrid`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `externalgrid` (
-  `net` json DEFAULT NULL,
   `bus` int(11) NOT NULL,
-  `vm_pu` float NOT NULL COMMENT '电压标幺值',
+  `vm_pu` float NOT NULL DEFAULT '1' COMMENT '电压标幺值',
   `va_degree` float DEFAULT '0' COMMENT '电压角度(度)',
   `name` varchar(100) DEFAULT NULL,
   `index` int(11) DEFAULT NULL,
@@ -270,8 +265,7 @@ CREATE TABLE `externalgrid` (
   `max_q_mvar` float DEFAULT NULL COMMENT '最大无功功率(MVar)',
   `min_q_mvar` float DEFAULT NULL COMMENT '最小无功功率(MVar)',
   `slack_weight` float DEFAULT '1' COMMENT '平衡节点权重',
-  `controllable` tinyint(1) DEFAULT NULL COMMENT '是否可控',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `controllable` tinyint(1) DEFAULT NULL COMMENT '是否可控'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -294,7 +288,7 @@ DROP TABLE IF EXISTS `generator`;
 CREATE TABLE `generator` (
   `bus` int(11) NOT NULL,
   `p_mw` float NOT NULL COMMENT '有功功率(MW)',
-  `vm_pu` float NOT NULL COMMENT '电压设定点(标幺值)',
+  `vm_pu` float DEFAULT '1',
   `sn_mva` float DEFAULT NULL COMMENT '额定容量(MVA)',
   `vn_kv` float DEFAULT NULL COMMENT '额定电压(kV)',
   `cos_phi` float DEFAULT NULL COMMENT '额定功率因数',
@@ -318,8 +312,7 @@ CREATE TABLE `generator` (
   `max_q_mvar` float DEFAULT NULL COMMENT '最大无功功率(MVar)',
   `min_q_mvar` float DEFAULT NULL COMMENT '最小无功功率(MVar)',
   `min_vm_pu` float DEFAULT NULL COMMENT '最小电压(标幺值)',
-  `max_vm_pu` float DEFAULT NULL COMMENT '最大电压(标幺值)',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `max_vm_pu` float DEFAULT NULL COMMENT '最大电压(标幺值)'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -345,8 +338,8 @@ CREATE TABLE `hvdclink` (
   `p_mw` float NOT NULL COMMENT '传输有功功率(MW)，from→to为正',
   `loss_percent` float DEFAULT NULL COMMENT '相对损耗百分比(%)',
   `loss_mw` float DEFAULT NULL COMMENT '总损耗功率(MW)',
-  `vm_from_pu` float NOT NULL COMMENT '整流侧电压标幺值',
-  `vm_to_pu` float NOT NULL COMMENT '逆变侧电压标幺值',
+  `vm_from_pu` float DEFAULT '1',
+  `vm_to_pu` float DEFAULT '1',
   `name` varchar(100) DEFAULT NULL,
   `index` int(11) DEFAULT NULL,
   `in_service` tinyint(1) DEFAULT '1',
@@ -354,8 +347,7 @@ CREATE TABLE `hvdclink` (
   `min_q_from_mvar` float DEFAULT NULL COMMENT '整流侧最小无功(MVar)',
   `min_q_to_mvar` float DEFAULT NULL COMMENT '逆变侧最小无功(MVar)',
   `max_q_from_mvar` float DEFAULT NULL COMMENT '整流侧最大无功(MVar)',
-  `max_q_to_mvar` float DEFAULT NULL COMMENT '逆变侧最大无功(MVar)',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `max_q_to_mvar` float DEFAULT NULL COMMENT '逆变侧最大无功(MVar)'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -397,8 +389,7 @@ CREATE TABLE `impedance` (
   `bt0_pu` float DEFAULT NULL COMMENT 'to侧零序电纳',
   `name` varchar(100) DEFAULT NULL,
   `index` int(11) DEFAULT NULL,
-  `in_service` tinyint(1) DEFAULT '1',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `in_service` tinyint(1) DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -431,8 +422,7 @@ CREATE TABLE `line` (
   `parallel` int(11) DEFAULT '1' COMMENT '并行数',
   `max_loading_percent` float DEFAULT NULL COMMENT '最大负载%',
   `alpha` float DEFAULT '0.00403' COMMENT '温度系数',
-  `temperature_degree_celsius` float DEFAULT '20' COMMENT '温度℃',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `temperature_degree_celsius` float DEFAULT '20' COMMENT '温度℃'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -465,8 +455,7 @@ CREATE TABLE `linedc` (
   `parallel` int(11) DEFAULT '1',
   `max_loading_percent` float DEFAULT NULL,
   `alpha` float DEFAULT '0.00403',
-  `temperature_degree_celsius` float DEFAULT '20',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `temperature_degree_celsius` float DEFAULT '20'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -504,8 +493,7 @@ CREATE TABLE `load` (
   `min_p_mw` float DEFAULT NULL,
   `max_q_mvar` float DEFAULT NULL,
   `min_q_mvar` float DEFAULT NULL,
-  `controllable` tinyint(1) DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `controllable` tinyint(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -533,8 +521,7 @@ CREATE TABLE `loaddc` (
   `in_service` tinyint(1) DEFAULT '1',
   `scaling` float DEFAULT NULL,
   `type` varchar(50) DEFAULT NULL,
-  `controllable` tinyint(1) DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `controllable` tinyint(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -565,8 +552,7 @@ CREATE TABLE `measurement` (
   `name` varchar(100) DEFAULT NULL,
   `index` int(11) DEFAULT NULL,
   `check_existing` tinyint(1) DEFAULT '1' COMMENT '是否检查重复测量',
-  `measurement_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '测量时间',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `measurement_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '测量时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -600,8 +586,7 @@ CREATE TABLE `motor` (
   `vn_kv` float DEFAULT NULL COMMENT '额定电压(kV)',
   `name` varchar(100) DEFAULT NULL,
   `index` int(11) DEFAULT NULL,
-  `in_service` tinyint(1) DEFAULT '1',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `in_service` tinyint(1) DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -632,8 +617,7 @@ CREATE TABLE `shunt` (
   `index` int(11) DEFAULT NULL,
   `step_dependency_table` tinyint(1) DEFAULT '0' COMMENT '参数是否依赖级数',
   `id_characteristic_table` int(11) DEFAULT NULL COMMENT '特性曲线ID',
-  `in_service` tinyint(1) DEFAULT '1',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `in_service` tinyint(1) DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -656,12 +640,11 @@ DROP TABLE IF EXISTS `sourcedc`;
 CREATE TABLE `sourcedc` (
   `net` json DEFAULT NULL,
   `bus_dc` int(11) NOT NULL,
-  `vm_pu` float NOT NULL COMMENT '电压设定点(标幺值)',
+  `vm_pu` float DEFAULT '1',
   `name` varchar(100) DEFAULT NULL,
   `index` int(11) DEFAULT NULL,
   `in_service` tinyint(1) DEFAULT '1',
-  `source_type` varchar(50) DEFAULT NULL COMMENT '电源类型',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `source_type` varchar(50) DEFAULT NULL COMMENT '电源类型'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -705,8 +688,7 @@ CREATE TABLE `staticgenerator` (
   `lrc_pu` float DEFAULT NULL COMMENT '堵转电流标幺值（异步发电机用）',
   `max_ik_ka` float DEFAULT NULL COMMENT '最大瞬时短路电流(kA)（双馈异步用）',
   `kappa` float DEFAULT NULL COMMENT '峰值短路电流系数（双馈异步用）',
-  `current_source` tinyint(1) DEFAULT '0' COMMENT '是否作为电流源进行短路计算',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `current_source` tinyint(1) DEFAULT '0' COMMENT '是否作为电流源进行短路计算'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -730,14 +712,13 @@ CREATE TABLE `staticsynchronouscompensator` (
   `bus` int(11) NOT NULL COMMENT '连接母线',
   `r_ohm` float NOT NULL COMMENT '耦合变压器电阻(Ω)',
   `x_ohm` float NOT NULL COMMENT '耦合变压器电抗(Ω)',
-  `set_vm_pu` float NOT NULL COMMENT '母线电压设定点(标幺值)',
+  `set_vm_pu` float DEFAULT '1',
   `vm_internal_pu` float NOT NULL COMMENT 'VSC内部电压幅值(标幺值)',
-  `va_internal_degree` float NOT NULL COMMENT 'VSC内部电压角度(度)',
+  `va_internal_degree` float DEFAULT '1',
   `name` varchar(100) DEFAULT NULL,
   `index` int(11) DEFAULT NULL,
   `controllable` tinyint(1) DEFAULT '0' COMMENT '是否可控',
-  `in_service` tinyint(1) DEFAULT '1',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `in_service` tinyint(1) DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -761,15 +742,14 @@ CREATE TABLE `staticvarcompensator` (
   `bus` int(11) NOT NULL COMMENT '连接母线',
   `x_l_ohm` float NOT NULL COMMENT '感性电抗(Ω)',
   `x_cvar_ohm` float NOT NULL COMMENT '容性电抗(Ω)',
-  `set_vm_pu` float NOT NULL COMMENT '电压设定点(标幺值)',
+  `set_vm_pu` float DEFAULT '1',
   `thyristor_firing_angle_degree` float NOT NULL COMMENT '晶闸管触发角(度)',
   `name` varchar(100) DEFAULT NULL,
   `index` int(11) DEFAULT NULL,
   `controllable` tinyint(1) DEFAULT '0' COMMENT '是否可控',
   `in_service` tinyint(1) DEFAULT '1',
   `min_angle_degree` float DEFAULT '90' COMMENT '最小触发角(度)',
-  `max_angle_degree` float DEFAULT '180' COMMENT '最大触发角(度)',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `max_angle_degree` float DEFAULT '180' COMMENT '最大触发角(度)'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -806,8 +786,7 @@ CREATE TABLE `storage` (
   `min_p_mw` float DEFAULT NULL COMMENT '最大放电功率(MW，负值)',
   `max_q_mvar` float DEFAULT NULL COMMENT '最大无功功率(MVar)',
   `min_q_mvar` float DEFAULT NULL COMMENT '最小无功功率(MVar)',
-  `controllable` tinyint(1) DEFAULT '0' COMMENT '是否可控',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `controllable` tinyint(1) DEFAULT '0' COMMENT '是否可控'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -836,8 +815,7 @@ CREATE TABLE `switch` (
   `z_ohm` float DEFAULT '0',
   `in_ka` float DEFAULT NULL,
   `name` varchar(100) DEFAULT NULL,
-  `index` int(11) DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `index` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -858,20 +836,49 @@ DROP TABLE IF EXISTS `threewindingtransformer`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `threewindingtransformer` (
-  `hv_bus` int(11) NOT NULL COMMENT '高压侧母线',
-  `mv_bus` int(11) NOT NULL COMMENT '中压侧母线',
-  `lv_bus` int(11) NOT NULL COMMENT '低压侧母线',
-  `std_type` varchar(100) NOT NULL COMMENT '标准类型',
-  `name` varchar(100) DEFAULT NULL,
-  `index` int(11) DEFAULT NULL,
-  `tap_pos` int(11) DEFAULT '0' COMMENT '当前分接头位置',
-  `tap_changer_type` enum('Ratio','Symmetrical','Ideal','Tabular') DEFAULT NULL COMMENT '分接头类型',
-  `tap_at_star_point` tinyint(1) DEFAULT '0' COMMENT '分接头是否在星点',
-  `tap_dependency_table` tinyint(1) DEFAULT '0' COMMENT '参数是否依赖分接头位置',
-  `id_characteristic_table` int(11) DEFAULT NULL COMMENT '特性曲线ID',
-  `in_service` tinyint(1) DEFAULT '1',
-  `max_loading_percent` float DEFAULT NULL COMMENT '最大负载百分比',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `index` int(11) NOT NULL AUTO_INCREMENT COMMENT '三绕组变压器唯一索引',
+  `name` varchar(255) DEFAULT NULL COMMENT '变压器名称',
+  `std_type` varchar(255) DEFAULT NULL COMMENT '标准型号名称',
+  `hv_bus` int(11) NOT NULL COMMENT '高压侧母线索引',
+  `mv_bus` int(11) NOT NULL COMMENT '中压侧母线索引',
+  `lv_bus` int(11) NOT NULL COMMENT '低压侧母线索引',
+  `vn_hv_kv` float NOT NULL COMMENT '高压侧额定电压(kV)',
+  `vn_mv_kv` float NOT NULL COMMENT '中压侧额定电压(kV)',
+  `vn_lv_kv` float NOT NULL COMMENT '低压侧额定电压(kV)',
+  `sn_hv_mva` float NOT NULL COMMENT '高压侧额定视在功率(MVA)',
+  `sn_mv_mva` float NOT NULL COMMENT '中压侧额定视在功率(MVA)',
+  `sn_lv_mva` float NOT NULL COMMENT '低压侧额定视在功率(MVA)',
+  `vk_hv_percent` float NOT NULL COMMENT '高中侧短路电压(%)',
+  `vk_mv_percent` float NOT NULL COMMENT '中低侧短路电压(%)',
+  `vk_lv_percent` float NOT NULL COMMENT '高低侧短路电压(%)',
+  `vkr_hv_percent` float NOT NULL COMMENT '高中侧短路电阻分量(%)',
+  `vkr_mv_percent` float NOT NULL COMMENT '中低侧短路电阻分量(%)',
+  `vkr_lv_percent` float NOT NULL COMMENT '高低侧短路电阻分量(%)',
+  `pfe_kw` float NOT NULL COMMENT '铁损(kW)',
+  `i0_percent` float NOT NULL COMMENT '空载电流百分比(%)',
+  `shift_mv_degree` float DEFAULT '0' COMMENT '中压侧相移角度',
+  `shift_lv_degree` float DEFAULT '0' COMMENT '低压侧相移角度',
+  `tap_side` enum('hv','mv','lv') DEFAULT NULL COMMENT '分接头所在侧：hv=高压侧，mv=中压侧，lv=低压侧',
+  `tap_step_percent` float DEFAULT NULL COMMENT '分接头电压步长百分比',
+  `tap_step_degree` float DEFAULT NULL COMMENT '分接头角度步长',
+  `tap_neutral` int(11) DEFAULT NULL COMMENT '分接头中间档位',
+  `tap_min` int(11) DEFAULT NULL COMMENT '分接头最小档位',
+  `tap_max` int(11) DEFAULT NULL COMMENT '分接头最大档位',
+  `tap_pos` int(11) DEFAULT NULL COMMENT '分接头当前位置',
+  `tap_changer_type` enum('Ratio','Symmetrical','Ideal','Tabular') DEFAULT NULL COMMENT '分接头类型：Ratio=标准调压，Symmetrical=对称调压，Ideal=理想调压，Tabular=表格调压',
+  `tap_at_star_point` tinyint(1) DEFAULT '0' COMMENT '分接头是否连接在星点侧',
+  `vk0_hv_percent` float DEFAULT NULL COMMENT '高中侧零序短路电压(%)',
+  `vk0_mv_percent` float DEFAULT NULL COMMENT '中低侧零序短路电压(%)',
+  `vk0_lv_percent` float DEFAULT NULL COMMENT '高低侧零序短路电压(%)',
+  `vkr0_hv_percent` float DEFAULT NULL COMMENT '高中侧零序短路电阻分量(%)',
+  `vkr0_mv_percent` float DEFAULT NULL COMMENT '中低侧零序短路电阻分量(%)',
+  `vkr0_lv_percent` float DEFAULT NULL COMMENT '高低侧零序短路电阻分量(%)',
+  `vector_group` varchar(10) DEFAULT NULL COMMENT '连接组别，如 "YNyn0d5"',
+  `tap_dependency_table` tinyint(1) DEFAULT '0' COMMENT '是否使用特性表：True=使用，False=不使用',
+  `id_characteristic_table` int(11) DEFAULT NULL COMMENT '特性表索引',
+  `in_service` tinyint(1) DEFAULT '1' COMMENT '投运状态：True=投运，False=退出',
+  `max_loading_percent` float DEFAULT NULL COMMENT '最大负载率(%)，OPF用',
+  PRIMARY KEY (`index`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -906,7 +913,6 @@ CREATE TABLE `thyristorcontrolledseriescapacitor` (
   `in_service` tinyint(1) DEFAULT '1',
   `min_angle_degree` float DEFAULT '90' COMMENT '最小触发角(度)',
   `max_angle_degree` float DEFAULT '180' COMMENT '最大触发角(度)',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -928,29 +934,53 @@ DROP TABLE IF EXISTS `transformer`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `transformer` (
-  `hv_bus` int(11) NOT NULL COMMENT '高压侧母线',
-  `lv_bus` int(11) NOT NULL COMMENT '低压侧母线',
-  `std_type` varchar(50) NOT NULL COMMENT '标准类型',
-  `name` varchar(100) DEFAULT NULL,
-  `index` int(11) DEFAULT NULL,
-  `tap_pos` int(11) DEFAULT '0' COMMENT '当前分接头位置',
-  `tap2_pos` int(11) DEFAULT '0' COMMENT '第二分接头位置',
-  `tap_changer_type` varchar(50) DEFAULT NULL COMMENT '分接头类型',
-  `tap_dependency_table` tinyint(1) DEFAULT '0',
-  `id_characteristic_table` int(11) DEFAULT NULL COMMENT '特性曲线ID',
-  `vk0_percent` float DEFAULT NULL COMMENT '零序短路电压百分比',
-  `vkr0_percent` float DEFAULT NULL COMMENT '零序短路电压实部百分比',
+  `index` int(11) NOT NULL COMMENT '变压器唯一索引',
+  `name` varchar(255) DEFAULT NULL COMMENT '变压器名称',
+  `std_type` varchar(255) DEFAULT NULL COMMENT '标准型号',
+  `hv_bus` int(11) NOT NULL COMMENT '高压侧母线索引',
+  `lv_bus` int(11) NOT NULL COMMENT '低压侧母线索引',
+  `sn_mva` float DEFAULT NULL COMMENT '额定视在功率(MVA)',
+  `vn_hv_kv` float DEFAULT NULL COMMENT '高压侧额定电压(kV)',
+  `vn_lv_kv` float DEFAULT NULL COMMENT '低压侧额定电压(kV)',
+  `vkr_percent` float DEFAULT NULL COMMENT '短路电压有功分量(%)',
+  `vk_percent` float DEFAULT NULL COMMENT '短路电压(%)',
+  `pfe_kw` float DEFAULT NULL COMMENT '铁损(kW)',
+  `i0_percent` float DEFAULT NULL COMMENT '空载电流(%)',
+  `shift_degree` float DEFAULT '0' COMMENT '相移角度',
+  `vector_group` varchar(10) DEFAULT NULL COMMENT '连接组别，如 "Dyn5", "Yyn0"',
+  `vk0_percent` float DEFAULT NULL COMMENT '零序短路电压(%)',
+  `vkr0_percent` float DEFAULT NULL COMMENT '零序短路电压有功分量(%)',
   `mag0_percent` float DEFAULT NULL COMMENT '零序励磁阻抗百分比',
   `mag0_rx` float DEFAULT NULL COMMENT '零序励磁R/X比',
-  `si0_hv_partial` float DEFAULT NULL COMMENT '零序短路阻抗高压侧分布',
-  `xn_ohm` float DEFAULT NULL COMMENT '接地电抗阻抗(Ω)',
-  `pt_percent` float DEFAULT NULL COMMENT '百分值参数',
-  `in_service` tinyint(1) DEFAULT '1',
-  `max_loading_percent` float DEFAULT NULL COMMENT '最大负载百分比',
-  `parallel` int(11) DEFAULT '1' COMMENT '并联变压器数量',
-  `df` float DEFAULT '1' COMMENT '降额因子',
-  `oltc` tinyint(1) DEFAULT '0',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `si0_hv_partial` float DEFAULT NULL COMMENT '零序漏抗高压侧分配',
+  `tap_side` enum('hv','lv') DEFAULT NULL COMMENT '分接头所在侧：hv=高压侧，lv=低压侧',
+  `tap_neutral` int(11) DEFAULT NULL COMMENT '分接头中间档位',
+  `tap_min` int(11) DEFAULT NULL COMMENT '分接头最小档位',
+  `tap_max` int(11) DEFAULT NULL COMMENT '分接头最大档位',
+  `tap_step_percent` float DEFAULT NULL COMMENT '分接头电压步长百分比',
+  `tap_step_degree` float DEFAULT NULL COMMENT '分接头角度步长',
+  `tap_pos` int(11) DEFAULT NULL COMMENT '分接头当前位置',
+  `tap_changer_type` enum('Ratio','Symmetrical','Ideal','Tabular','None') DEFAULT 'Ratio' COMMENT '分接头类型：Ratio=标准调压，Symmetrical=对称调压，Ideal=理想调压，Tabular=表格调压，None=无分接头',
+  `oltc` tinyint(1) DEFAULT '0' COMMENT '是否有载调压：True=有载调压，False=无励磁调压',
+  `tap2_side` enum('hv','lv') DEFAULT NULL COMMENT '第二分接头所在侧：hv=高压侧，lv=低压侧',
+  `tap2_neutral` int(11) DEFAULT NULL COMMENT '第二分接头中间档位',
+  `tap2_min` int(11) DEFAULT NULL COMMENT '第二分接头最小档位',
+  `tap2_max` int(11) DEFAULT NULL COMMENT '第二分接头最大档位',
+  `tap2_step_percent` float DEFAULT NULL COMMENT '第二分接头电压步长百分比',
+  `tap2_step_degree` float DEFAULT NULL COMMENT '第二分接头角度步长',
+  `tap2_pos` int(11) DEFAULT NULL COMMENT '第二分接头当前位置',
+  `tap2_changer_type` enum('Ratio','Symmetrical','Ideal','Tabular','None') DEFAULT NULL COMMENT '第二分接头类型：Ratio=标准调压，Symmetrical=对称调压，Ideal=理想调压，Tabular=表格调压，None=无分接头',
+  `in_service` tinyint(1) DEFAULT '1' COMMENT '投运状态：True=投运，False=退出',
+  `parallel` int(11) DEFAULT '1' COMMENT '并联台数',
+  `df` float DEFAULT '1' COMMENT '降额系数：0-1之间的浮点数',
+  `max_loading_percent` float DEFAULT NULL COMMENT '最大负载率(%)，OPF用',
+  `tap_dependency_table` tinyint(1) DEFAULT '0' COMMENT '是否使用特性表：True=使用，False=不使用',
+  `id_characteristic_table` int(11) DEFAULT NULL COMMENT '特性表索引',
+  `xn_ohm` float DEFAULT NULL COMMENT '接地电抗(Ω)',
+  `pt_percent` float DEFAULT NULL COMMENT '短路计算参数',
+  `leakage_resistance_ratio_hv` float DEFAULT '0.5' COMMENT '电阻高压侧分配比：0-1之间的浮点数',
+  `leakage_reactance_ratio_hv` float DEFAULT '0.5' COMMENT '电抗高压侧分配比：0-1之间的浮点数',
+  PRIMARY KEY (`index`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -984,8 +1014,7 @@ CREATE TABLE `voltagesourceconverter` (
   `name` varchar(100) DEFAULT NULL,
   `index` int(11) DEFAULT NULL,
   `controllable` tinyint(1) DEFAULT '0' COMMENT '是否可控',
-  `in_service` tinyint(1) DEFAULT '1',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `in_service` tinyint(1) DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -1013,8 +1042,7 @@ CREATE TABLE `ward` (
   `qz_mvar` float NOT NULL COMMENT '阻抗部分无功功率(MVar)，1.0pu时',
   `name` varchar(100) DEFAULT NULL,
   `index` int(11) DEFAULT NULL,
-  `in_service` tinyint(1) DEFAULT '1',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `in_service` tinyint(1) DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -1036,4 +1064,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-03-11 21:32:51
+-- Dump completed on 2026-03-16 13:16:56
